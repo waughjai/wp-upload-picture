@@ -1,0 +1,29 @@
+{
+    "name": "waughj/wp-upload-picture",
+    "description": "Class for autogenerating picture tag HTML for WordPress media image with just the ID.",
+    "keywords": [ "wordpress", "media image", "picture tag" ],
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jaimeson Waugh",
+            "email": "waughjai@gmail.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+		"php": ">=7.0",
+        "waughj/file-loader": ">=0.2.0",
+        "waughj/html-picture": "*",
+		"waughj/test-hash-item": "*",
+		"waughj/wp-get-image-sizes": "*",
+        "waughj/wp-upload-image": "*"
+    },
+    "require-dev": {
+		"phpunit/phpunit": "6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "WaughJ\\WPUploadPicture\\": "src/"
+        }
+    }
+}
