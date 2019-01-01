@@ -16,7 +16,7 @@
         "waughj/html-picture": ">=0.3.0",
 		"waughj/test-hash-item": "*",
 		"waughj/wp-get-image-sizes": "*",
-        "waughj/wp-upload-image": "*"
+        "waughj/wp-upload-image": ">=0.1.1"
     },
     "require-dev": {
 		"phpunit/phpunit": "6.*"
