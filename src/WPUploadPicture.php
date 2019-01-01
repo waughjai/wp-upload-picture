@@ -4,6 +4,8 @@ declare( strict_types = 1 );
 namespace WaughJ\WPUploadPicture
 {
 	use WaughJ\HTMLPicture\HTMLPicture;
+	use WaughJ\HTMLImage\HTMLImage;
+	use WaughJ\HTMLPicture\HTMLPictureSource;
 	use WaughJ\WPUploadImage\WPUploadImage;
 	use function WaughJ\WPGetImageSizes\WPGetImageSizes;
 
@@ -11,22 +13,25 @@ namespace WaughJ\WPUploadPicture
 	{
 		public function __construct( int $id, array $attributes = [] )
 		{
-			$attributes[ 'loader' ] = WPUploadImage::getFileLoader();
-			$full_url = wp_get_attachment_image_src( $id, 'full' )[ 0 ];
-			$extension = $attributes[ 'loader' ]->getExtension( $full_url );
-			$src = str_replace( '.' . $extension, '',  WPUploadImage::filterUploadDir( $full_url ) );
-			parent::__construct( $src, $extension, self::getDefaultSizes(), $attributes );
+			$sources = self::getSources( $id );
+			$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet() );
+			parent::__construct( $fallback_image, $sources, $attributes );
 		}
 
-		private function getDefaultSizes() : array
+		private static function getSources( int $id ) : array
 		{
+			$loader = WPUploadImage::getFileLoader();
+			$sources = [];
 			$image_sizes = WPGetImageSizes();
-			$new_sizes = [];
 			foreach ( $image_sizes as $size )
 			{
-				$new_sizes[] = [ 'w' => $size->getWidth(), 'h' => $size->getHeight() ];
+				$image_size_obj = wp_get_attachment_image_src( $id, $size->getSlug() );
+				$url = $loader->getSourceWithVersion( WPUploadImage::filterUploadDir( $image_size_obj[ 0 ] ) );
+				$max_width = $image_size_obj[ 1 ];
+				$media = "(max-width:{$max_width}px)";
+				$sources[] = new HTMLPictureSource( $url, $media );
 			}
-			return $new_sizes;
+			return $sources;
 		}
 	}
 }
