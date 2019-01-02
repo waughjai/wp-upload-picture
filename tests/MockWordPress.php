@@ -42,8 +42,8 @@
 	{
 		return
 		[
-			'path' => getcwd(),
-			'url' => 'https://www.example.com/wp-content/uploads'
+			'basedir' => getcwd(),
+			'baseurl' => 'https://www.example.com/wp-content/uploads'
 		];
 	}
 
@@ -117,6 +117,11 @@
 			}
 		}
 	};
+
+	function wp_get_attachment_metadata( $id )
+	{
+		return [ 'file' => '2018/12/' . IMAGE_IDS[ $id ][ 'src' ] . '.' . IMAGE_IDS[ $id ][ 'ext' ] ];
+	}
 
 	function add_theme_page() {};
 	function add_option() {};

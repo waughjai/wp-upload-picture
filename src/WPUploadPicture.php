@@ -6,7 +6,6 @@ namespace WaughJ\WPUploadPicture
 	use WaughJ\HTMLPicture\HTMLPicture;
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\HTMLPicture\HTMLPictureSource;
-	use WaughJ\WPUploadImage\WPUploadImage;
 	use function WaughJ\WPGetImageSizes\WPGetImageSizes;
 
 	class WPUploadPicture extends HTMLPicture
@@ -20,13 +19,12 @@ namespace WaughJ\WPUploadPicture
 
 		private static function getSources( int $id ) : array
 		{
-			$loader = WPUploadImage::getFileLoader();
 			$sources = [];
 			$image_sizes = WPGetImageSizes();
 			foreach ( $image_sizes as $size )
 			{
 				$image_size_obj = wp_get_attachment_image_src( $id, $size->getSlug() );
-				$url = $loader->getSourceWithVersion( WPUploadImage::filterUploadDir( $image_size_obj[ 0 ] ) );
+				$url = $image_size_obj[ 0 ];
 				$max_width = $image_size_obj[ 1 ];
 				$media = "(max-width:{$max_width}px)";
 				$sources[] = new HTMLPictureSource( $url, $media );
