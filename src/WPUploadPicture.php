@@ -21,13 +21,19 @@ namespace WaughJ\WPUploadPicture
 		{
 			$sources = [];
 			$image_sizes = WPGetImageSizes();
-			foreach ( $image_sizes as $size )
+			$number_of_image_sizes = count( $image_sizes );
+			$min_width = null;
+			for ( $i = 0; $i < $number_of_image_sizes; $i++ )
 			{
+				$size = $image_sizes[ $i ];
 				$image_size_obj = wp_get_attachment_image_src( $id, $size->getSlug() );
 				$url = $image_size_obj[ 0 ];
 				$max_width = $image_size_obj[ 1 ];
-				$media = "(max-width:{$max_width}px)";
+				$media = ( $i === $number_of_image_sizes - 1 && $i > 0 )
+					? "(min-width:{$min_width}px)"
+					: "(max-width:{$max_width}px)";
 				$sources[] = new HTMLPictureSource( $url, $media );
+				$min_width = $max_width + 1;
 			}
 			return $sources;
 		}
