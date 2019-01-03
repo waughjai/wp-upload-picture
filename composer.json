@@ -12,7 +12,7 @@
     "type": "library",
     "require": {
 		"php": ">=7.0",
-        "waughj/html-picture": ">=0.3.0",
+        "waughj/html-picture": ">=0.4.1",
 		"waughj/test-hash-item": "*",
 		"waughj/wp-get-image-sizes": "*"
     },
