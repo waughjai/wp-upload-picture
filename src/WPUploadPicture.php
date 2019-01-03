@@ -13,7 +13,7 @@ namespace WaughJ\WPUploadPicture
 	{
 		public function __construct( int $id, array $attributes = [] )
 		{
-			$sources = self::getSources( $id, TestHashItemArray( $attributes, 'source-attributes', [] ) );
+			$sources = self::generateSources( $id, TestHashItemArray( $attributes, 'source-attributes', [] ) );
 			$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet(), null, TestHashItemArray( $attributes, 'img-attributes', [] ) );
 			$picture_attributes = TestHashItemArray( $attributes, 'picture-attributes', [] );
 			unset( $attributes[ 'img-attributes' ], $attributes[ 'source-attributes' ], $attributes[ 'picture-attributes' ] );
@@ -21,7 +21,7 @@ namespace WaughJ\WPUploadPicture
 			parent::__construct( $fallback_image, $sources, $attributes );
 		}
 
-		private static function getSources( int $id, array $attributes ) : array
+		private static function generateSources( int $id, array $attributes ) : array
 		{
 			$sources = [];
 			$image_sizes = WPGetImageSizes();
