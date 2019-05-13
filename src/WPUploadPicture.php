@@ -6,14 +6,24 @@ namespace WaughJ\WPUploadPicture
 	use WaughJ\HTMLPicture\HTMLPicture;
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\HTMLPicture\HTMLPictureSource;
+	use WaughJ\WPUploadImage\WPUploadImage;
 	use function WaughJ\WPGetImageSizes\WPGetImageSizes;
 	use function WaughJ\TestHashItem\TestHashItemArray;
+	use function WaughJ\TestHashItem\TestHashItemExists;
 
 	class WPUploadPicture extends HTMLPicture
 	{
 		public function __construct( int $id, array $attributes = [] )
 		{
-			$sources = self::generateSources( $id, TestHashItemArray( $attributes, 'source-attributes', [] ) );
+			$src_attributes = TestHashItemArray( $attributes, 'source-attributes', [] );
+			$show_version = TestHashItemExists( $attributes, 'show-version', true );
+			unset( $attributes[ 'show-version' ] );
+			$sources = self::generateSources( $id, $src_attributes, $show_version );
+			if ( empty( $sources ) )
+			{
+				parent::__construct( new HTMLImage( '' ), [] );
+				return;
+			}
 			$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet(), null, TestHashItemArray( $attributes, 'img-attributes', [] ) );
 			$picture_attributes = TestHashItemArray( $attributes, 'picture-attributes', [] );
 			unset( $attributes[ 'img-attributes' ], $attributes[ 'source-attributes' ], $attributes[ 'picture-attributes' ] );
@@ -21,7 +31,7 @@ namespace WaughJ\WPUploadPicture
 			parent::__construct( $fallback_image, $sources, $attributes );
 		}
 
-		private static function generateSources( int $id, array $attributes ) : array
+		private static function generateSources( int $id, array $attributes, bool $show_version ) : array
 		{
 			$sources = [];
 			$image_sizes = WPGetImageSizes();
@@ -31,7 +41,11 @@ namespace WaughJ\WPUploadPicture
 			{
 				$size = $image_sizes[ $i ];
 				$image_size_obj = wp_get_attachment_image_src( $id, $size->getSlug() );
-				$url = $image_size_obj[ 0 ];
+				if ( $image_size_obj === null )
+				{
+					continue;
+				}
+				$url = WPUploadImage::getFormattedURL( $image_size_obj, $show_version );
 				$max_width = $image_size_obj[ 1 ];
 				$media = ( $i === $number_of_image_sizes - 1 && $i > 0 )
 					? "(min-width:{$min_width}px)"
