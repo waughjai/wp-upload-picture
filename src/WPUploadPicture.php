@@ -7,6 +7,7 @@ use WaughJ\FileLoader\MissingFileException;
 use WaughJ\HTMLPicture\HTMLPicture;
 use WaughJ\HTMLImage\HTMLImage;
 use WaughJ\HTMLPicture\HTMLPictureSource;
+use WaughJ\WPUploadImage\WPMissingMediaException;
 use WaughJ\WPUploadImage\WPUploadImage;
 use function WaughJ\WPGetImageSizes\WPGetImageSizes;
 use function WaughJ\TestHashItem\TestHashItemArray;
@@ -33,8 +34,7 @@ class WPUploadPicture extends HTMLPicture
 
 		if ( empty( $sources ) )
 		{
-			parent::__construct( new HTMLImage( '' ), [] );
-			return;
+			throw new WPMissingMediaException( $id );
 		}
 
 		$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet(), null, TestHashItemArray( $attributes, 'img-attributes', [] ) );
