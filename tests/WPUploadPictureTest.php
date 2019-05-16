@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use WaughJ\FileLoader\MissingFileException;
 use WaughJ\WPUploadPicture\WPUploadPicture;
 
 require_once( 'MockWordPress.php' );
@@ -34,5 +35,25 @@ class WPUploadPictureTest extends TestCase
 		$this->assertStringContainsString( ' srcset="https://www.example.com/wp-content/uploads/2018/12/photo-300x300.jpg"', $picture->getHTML() );
 		$this->assertStringNotContainsString( 'm?=', $picture->getHTML() );
 		$this->assertStringNotContainsString( ' show-version="', $picture->getHTML() );
+	}
+
+	public function testBasicPictureWithVersioning()
+	{
+		$picture = new WPUploadPicture( 2, [ 'img-attributes' => [ 'class' => 'something' ], 'source-attributes' => [ 'class' => 'something-else' ], 'picture-attributes' => [ 'class' => 'major' ] ] );
+		$this->assertStringContainsString( ' srcset="https://www.example.com/wp-content/uploads/2018/12/photo-300x300.jpg?m=', $picture->getHTML() );
+		$this->assertStringNotContainsString( ' show-version="', $picture->getHTML() );
+	}
+
+	public function testBasicPictureWithVersioningAndMissingFile()
+	{
+		try
+		{
+			$picture = new WPUploadPicture( 3, [ 'img-attributes' => [ 'class' => 'something' ], 'source-attributes' => [ 'class' => 'something-else' ], 'picture-attributes' => [ 'class' => 'major' ] ] );
+		}
+		catch ( MissingFileException $e )
+		{
+			$picture = $e->getFallbackContent();
+		}
+		$this->assertStringContainsString( ' srcset="https://www.example.com/wp-content/uploads/2018/12/jack-300x300.jpg"', $picture->getHTML() );
 	}
 }
