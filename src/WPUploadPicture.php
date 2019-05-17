@@ -67,7 +67,7 @@ class WPUploadPicture extends HTMLPicture
 			}
 			try
 			{
-				$url = WPUploadImage::getFormattedURL( $image_size_obj, $show_version );
+				$url = self::getFormattedURL( $image_size_obj, $show_version );
 			}
 			catch ( MissingFileException $e )
 			{
@@ -88,5 +88,11 @@ class WPUploadPicture extends HTMLPicture
 		}
 
 		return $sources;
+	}
+
+	private static function getFormattedURL( array &$wp_image_source_object, bool $show_version ) : string
+	{
+		$local_url = WPUploadImage::turnAbsolutePathIntoLocal( $wp_image_source_object );
+		return ( $show_version ) ? WPUploadImage::getFileLoader()->getSourceWithVersion( $local_url ) : WPUploadImage::getFileLoader()->getSource( $local_url );
 	}
 }
