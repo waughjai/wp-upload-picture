@@ -61,7 +61,7 @@ class WPUploadPicture extends HTMLPicture
 		{
 			$size = $image_sizes[ $i ];
 			$image_size_obj = wp_get_attachment_image_src( $id, $size->getSlug() );
-			if ( $image_size_obj === null )
+			if ( $image_size_obj === false )
 			{
 				continue;
 			}
