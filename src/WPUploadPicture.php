@@ -10,14 +10,13 @@ use WaughJ\HTMLPicture\HTMLPictureSource;
 use WaughJ\WPUploadImage\WPMissingMediaException;
 use WaughJ\WPUploadImage\WPUploadImage;
 use function WaughJ\WPGetImageSizes\WPGetImageSizes;
-use function WaughJ\TestHashItem\TestHashItemArray;
-use function WaughJ\TestHashItem\TestHashItemExists;
+use WaughJ\TestHashItem\TestHashItem;
 
 class WPUploadPicture extends HTMLPicture
 {
 	public function __construct( int $id, array $attributes = [] )
 	{
-		$src_attributes = TestHashItemArray( $attributes, 'source-attributes', [] );
+		$src_attributes = TestHashItem::getArray( $attributes, 'source-attributes', [] );
 		$show_version = $attributes[ 'show-version' ] ?? true;
 		unset( $attributes[ 'show-version' ] );
 
@@ -37,8 +36,8 @@ class WPUploadPicture extends HTMLPicture
 			throw new WPMissingMediaException( $id );
 		}
 
-		$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet(), null, TestHashItemArray( $attributes, 'img-attributes', [] ) );
-		$picture_attributes = TestHashItemArray( $attributes, 'picture-attributes', [] );
+		$fallback_image = new HTMLImage( $sources[ 0 ]->getSrcSet(), null, TestHashItem::getArray( $attributes, 'img-attributes', [] ) );
+		$picture_attributes = TestHashItem::getArray( $attributes, 'picture-attributes', [] );
 		unset( $attributes[ 'img-attributes' ], $attributes[ 'source-attributes' ], $attributes[ 'picture-attributes' ] );
 		$attributes = array_merge( $picture_attributes, $attributes );
 

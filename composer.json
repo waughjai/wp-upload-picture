@@ -2,7 +2,7 @@
     "name": "waughj/wp-upload-picture",
     "description": "Class for autogenerating picture tag HTML for WordPress media image with just the ID.",
     "keywords": [ "wordpress", "media image", "picture tag" ],
-    "license": "GPL-2.0-or-later",
+    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "Jaimeson Waugh",
@@ -12,10 +12,10 @@
     "type": "library",
     "require": {
 		"php": ">=7.0",
-        "waughj/html-picture": ">=0.7.0",
-		"waughj/test-hash-item": "*",
+        "waughj/html-picture": ">=0.7.2",
+		"waughj/test-hash-item": ">=2.0.0",
 		"waughj/wp-get-image-sizes": "*",
-		"waughj/wp-upload-image": ">=0.5.1"
+		"waughj/wp-upload-image": ">=0.5.2"
     },
     "require-dev": {
 		"phpunit/phpunit": "*"
